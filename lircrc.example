@@ -1,0 +1,78 @@
+# This is an example config file for your LIRC remote.  All buttons
+# depend on what you have configured in your lircd.conf file.  Please
+# refer to this and adjust the labels below accordingly.
+#
+# Save this file in ~/.lircrc
+
+begin
+  button = KEY_POWER
+  prog = sonos
+  config = power
+end
+
+begin
+  button = KEY_VOLUMEUP
+  prog = sonos
+  config = volumeup
+end
+
+begin
+  button = KEY_VOLUMEDOWN
+  prog = sonos
+  config = volumedown
+end
+
+begin
+  button = KEY_STOP
+  prog = sonos
+  config = stop
+end
+
+begin
+  button = KEY_NEXT
+  prog = sonos
+  config = next
+end
+
+begin
+  button = KEY_PREVIOUS
+  prog = sonos
+  config = previous
+end
+
+begin
+  button = KEY_PLAY
+  prog = sonos
+  config = play
+end
+
+begin
+  button = KEY_UP
+  prog = sonos
+  config = up
+end
+
+begin
+  button = KEY_DOWN
+  prog = sonos
+  config = down
+end
+
+begin
+  button = KEY_EQUAL
+  prog = sonos
+  config = eq
+end
+
+begin
+  button = KEY_REWIND
+  prog = sonos
+  config = rewind
+end
+
+begin
+  button = KEY_STOP
+  prog = sonos
+  config = stop
+end
+
