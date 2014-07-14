@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 import lirc
 import logging
+from pprint import pprint
 import time
-
 import soco
 
 logging.basicConfig(
-    format='%(levelname)s:%(message)s', 
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
+logger = logging.getLogger(__name__)
 
 VOL_TRESHOLD = 2
 
@@ -18,7 +19,8 @@ class SonosRemote(object):
         self.lirc_sockid = lirc.init("sonos")  # Init lirc
         self.zones = list(soco.discover())  # Sonos device discovery
 
-        logging.info(self.zones)
+        if self.sonos:
+            logger.info(pprint(self.sonos.get_speaker_info()))
 
     @property
     def sonos(self):
@@ -28,7 +30,7 @@ class SonosRemote(object):
     def loop(self):
         key = self.get_ir()
         if key:
-            logging.info('pressed: {}'.format( key ))
+            logger.info('pressed: {}'.format( key ))
             self.mapping(key)
 
     def get_ir(self):
@@ -46,17 +48,31 @@ class SonosRemote(object):
     def mapping(self, key):
         sonos = self.sonos
 
-        commands = dict(
-                volumeup = True,
-                volumedown = True,
-                play = sonos.play,
-                pause = sonos.pause, 
-        )
-
-        action = commands.get(key)
-        if key == 'play' and not self.sonos_playing() or\
-                key == 'pause' and self.sonos_playing():
-            action()        
+        if key == 'power':
+            logger.info('Power button is not implemented')
+        elif key == 'stop':
+            sonos.stop()
+        elif key == 'rewind':
+            sonos.mute
+            muteness = sonos.mute
+            if muteness:
+                sonos.mute = False
+            else:
+                sonos.mute = True
+        elif key == 'previous':
+            sonos.previous()
+        elif key == 'next':
+            sonos.next()
+        elif key == 'eq':
+            loudness = sonos.loudness
+            if loudness:
+                sonos.loudness = False
+            else:
+                sonos.loudness = True
+        elif key == 'play' and self.sonos_playing():
+            sonos.pause()
+        elif key == 'play' and not self.sonos_playing():
+            sonos.play()
         elif key == 'volumeup' or key == 'volumedown':
             v = volume = sonos.volume
 
@@ -66,14 +82,15 @@ class SonosRemote(object):
                 v -= VOL_TRESHOLD
 
             sonos.volume = v
-            logging.info('Volume from {0} to {1}'.format(volume, v)) 
+            logger.info('Volume from {0} to {1}'.format(volume, v)) 
+        else:
+            logger.info('Key not found: {0}'.format(key))
             
-        logging.info('{0}: {1}'.format(key, action))
 
 if __name__ == '__main__':
-    logging.info('IR remote interface for Sonos speakers')
+    logger.info('IR remote interface for Sonos speakers')
 
     remote = SonosRemote()
     while True:
         remote.loop()
-        time.sleep(0.1)
+        time.sleep(0.5)
