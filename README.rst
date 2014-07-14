@@ -1,19 +1,29 @@
+RPi Remote control for Sonos
+============================
 
-Prerequisites
--------------
+This script can be used to control a Sonos device using a remote 
+control on a Raspberry Pi with an IR receiver.  
 
+The LIRC daemon is used the read infrared signals from 
+the remote. The key which was pressed is read, and the action (such as 
+volume up or down) is sent to the Sonos device.
+
+Install
+-------
 Install LIRC and record ir codes from your remote using this tutorial:
+
     http://ozzmaker.com/2013/10/24/how-to-control-the-gpio-on-a-raspberry-pi-with-an-ir-remote/
     
 Modify lircrc config in lircrc.example and save it to ~/.lircrc
 
-Install the ir library:
-
-    sudo apt-get install python-lirc
-
-Install required modules:
+Install required modules::
 
     sudo pip install -r requirements 
 
-Install
--------
+Run the remote receiver by running::
+
+    python remote.py
+
+To start the remote receiver on boot, add the following line to crontab::
+
+    @reboot <path to script>/remote.py
