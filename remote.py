@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-VOL_TRESHOLD = 2
+VOL_STEP = 2
 
 class SonosRemote(object):
 
@@ -52,6 +52,14 @@ class SonosRemote(object):
             logger.info('Power button is not implemented')
         elif key == 'stop':
             sonos.stop()
+        elif key == 'play' and self.sonos_playing():
+            sonos.pause()
+        elif key == 'play' and not self.sonos_playing():
+            sonos.play()
+        elif key == 'previous':
+            sonos.previous()
+        elif key == 'next':
+            sonos.next()
         elif key == 'rewind':
             sonos.mute
             muteness = sonos.mute
@@ -59,27 +67,19 @@ class SonosRemote(object):
                 sonos.mute = False
             else:
                 sonos.mute = True
-        elif key == 'previous':
-            sonos.previous()
-        elif key == 'next':
-            sonos.next()
         elif key == 'eq':
             loudness = sonos.loudness
             if loudness:
                 sonos.loudness = False
             else:
                 sonos.loudness = True
-        elif key == 'play' and self.sonos_playing():
-            sonos.pause()
-        elif key == 'play' and not self.sonos_playing():
-            sonos.play()
         elif key == 'volumeup' or key == 'volumedown':
             v = volume = sonos.volume
 
             if key == 'volumeup':
-                v += VOL_TRESHOLD
+                v += VOL_STEP
             else:
-                v -= VOL_TRESHOLD
+                v -= VOL_STEP
 
             sonos.volume = v
             logger.info('Volume from {0} to {1}'.format(volume, v)) 
